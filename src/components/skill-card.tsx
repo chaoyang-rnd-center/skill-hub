@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Skill } from '@/types/skill';
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Download, Star, Copy, Check, ExternalLink } from 'lucide-react';
@@ -46,84 +46,80 @@ export function SkillCard({ skill }: SkillCardProps) {
   };
 
   return (
-    <Card className="group flex flex-col h-full transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-1 border-border/50 bg-card/50 backdrop-blur-sm">
+    <Card className="group flex flex-col h-full overflow-hidden">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-lg leading-tight group-hover:text-primary transition-colors truncate">
+            <CardTitle className="text-[15px] font-semibold truncate group-hover:text-[hsl(210,100%,38%)] transition-colors">
               {skill.name}
-            </h3>
-            <p className="text-sm text-muted-foreground mt-1 flex items-center gap-1">
-              <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 text-xs font-medium">
+            </CardTitle>
+            <div className="flex items-center gap-1.5 mt-1.5">
+              <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[hsl(210,20%,96%)] text-[hsl(210,8%,35%)] text-[10px] font-semibold">
                 {skill.author.charAt(0).toUpperCase()}
               </span>
-              <span className="truncate">{skill.author}</span>
-            </p>
+              <span className="text-xs text-[hsl(210,8%,45%)] truncate">{skill.author}</span>
+            </div>
           </div>
-          <Badge variant="secondary" className="shrink-0 text-xs">
+          <Badge variant="secondary" className="shrink-0 text-[11px]">
             {skill.category}
           </Badge>
         </div>
       </CardHeader>
 
-      <CardContent className="flex-1 pb-4">
-        <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">
+      <CardContent className="flex-1 py-0">
+        <CardDescription className="text-[13px] line-clamp-3">
           {skill.description}
-        </p>
+        </CardDescription>
 
-        <div className="flex flex-wrap gap-1.5 mt-4">
-          {skill.tags.map((tag) => (
+        <div className="flex flex-wrap gap-1.5 mt-3">
+          {skill.tags.slice(0, 4).map((tag) => (
             <span
               key={tag}
-              className="text-xs px-2 py-0.5 rounded-full bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
+              className="text-[11px] px-1.5 py-0.5 rounded bg-[hsl(210,20%,96%)] text-[hsl(210,8%,45%)]"
             >
-              #{tag}
+              {tag}
             </span>
           ))}
         </div>
       </CardContent>
 
-      <CardFooter className="pt-3 border-t border-border/50 flex-col gap-3">
-        <div className="flex items-center justify-between w-full text-sm text-muted-foreground">
-          <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1.5" title="Downloads">
-              <Download className="w-4 h-4" />
+      <CardFooter className="mt-auto">
+        <div className="flex items-center justify-between w-full mb-3">
+          <div className="flex items-center gap-3 text-xs text-[hsl(210,8%,45%)]">
+            <span className="flex items-center gap-1" title="Downloads">
+              <Download className="w-3.5 h-3.5" />
               <span className="font-medium">{formatNumber(skill.downloads)}</span>
             </span>
-            <span className="flex items-center gap-1.5" title="Stars">
-              <Star className="w-4 h-4" />
+            <span className="flex items-center gap-1" title="Stars">
+              <Star className="w-3.5 h-3.5" />
               <span className="font-medium">{formatNumber(skill.stars)}</span>
             </span>
           </div>
-          <span className="text-xs">Updated {formatDate(skill.updatedAt)}</span>
+          <span className="text-[11px] text-[hsl(210,8%,45%)]">{formatDate(skill.updatedAt)}</span>
         </div>
 
         <div className="flex gap-2 w-full">
           <Button
-            variant="outline"
+            variant={copied ? "secondary" : "default"}
             size="sm"
-            className="flex-1 gap-2"
+            className="flex-1 gap-1.5"
             onClick={handleCopy}
           >
             {copied ? (
               <>
-                <Check className="w-4 h-4 text-green-500" />
-                <span className="text-green-600">Copied!</span>
+                <Check className="w-3.5 h-3.5" />
+                Copied
               </>
             ) : (
               <>
-                <Copy className="w-4 h-4" />
+                <Copy className="w-3.5 h-3.5" />
                 Copy Install
               </>
             )}
           </Button>
           <a href={skill.installUrl} target="_blank" rel="noopener noreferrer">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="px-3"
-            >
-              <ExternalLink className="w-4 h-4" />
+            <Button variant="outline" size="icon" className="h-7 w-7">
+              <ExternalLink className="w-3.5 h-3.5" />
             </Button>
           </a>
         </div>

@@ -1,15 +1,10 @@
 'use client';
 
-import { Search, SlidersHorizontal } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Select, SelectItem } from '@/components/ui/select';
 import { Category, CATEGORIES, SortOption } from '@/types/skill';
+import { cn } from '@/lib/utils';
 
 interface SearchFilterProps {
   searchQuery: string;
@@ -32,61 +27,60 @@ export function SearchFilter({
 }: SearchFilterProps) {
   return (
     <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row gap-4">
+      {/* Search and Sort Row */}
+      <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[hsl(210,8%,45%)]" />
           <Input
-            placeholder="Search skills by name, description, or tags..."
+            placeholder="Search skills..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="pl-10 h-11"
+            className="pl-9"
           />
         </div>
 
-        <div className="flex gap-3">
-          <Select value={sortBy} onValueChange={(v) => onSortChange(v as SortOption)}>
-            <SelectTrigger className="w-[160px] h-11">
-              <SlidersHorizontal className="w-4 h-4 mr-2" />
-              <SelectValue placeholder="Sort by" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="downloads">Most Downloads</SelectItem>
-              <SelectItem value="stars">Most Stars</SelectItem>
-              <SelectItem value="updatedAt">Recently Updated</SelectItem>
-              <SelectItem value="name">Name (A-Z)</SelectItem>
-            </SelectContent>
+        <div className="w-full sm:w-44">
+          <Select 
+            value={sortBy} 
+            onChange={(e) => onSortChange(e.target.value as SortOption)}
+          >
+            <SelectItem value="downloads">Most Downloads</SelectItem>
+            <SelectItem value="stars">Most Stars</SelectItem>
+            <SelectItem value="updatedAt">Recently Updated</SelectItem>
+            <SelectItem value="name">Name (A-Z)</SelectItem>
           </Select>
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-2">
+      {/* Category Pills */}
+      <div className="flex flex-wrap gap-1.5">
         {CATEGORIES.map((category) => (
           <button
             key={category}
             onClick={() => onCategoryChange(category)}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+            className={cn(
+              "px-3 py-1.5 rounded text-sm font-medium transition-all duration-150 border",
               selectedCategory === category
-                ? 'bg-primary text-primary-foreground shadow-sm'
-                : 'bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground'
-            }`}
+                ? "bg-[hsl(210,100%,38%)] text-white border-[hsl(210,100%,38%)]"
+                : "bg-white text-[hsl(210,8%,35%)] border-[hsl(210,16%,85%)] hover:border-[hsl(210,16%,70%)] hover:bg-[hsl(210,14%,98%)]"
+            )}
           >
             {category}
           </button>
         ))}
       </div>
 
-      <div className="text-sm text-muted-foreground">
-        Showing <span className="font-medium text-foreground">{resultCount}</span> skills
+      {/* Results Count */}
+      <div className="text-sm text-[hsl(210,8%,45%)]">
+        Showing <span className="font-medium text-[hsl(0,0%,14%)]">{resultCount}</span> skills
         {selectedCategory !== 'All' && (
           <span>
-            {' '}
-            in <span className="font-medium text-foreground">{selectedCategory}</span>
+            {' '}in <span className="font-medium text-[hsl(0,0%,14%)]">{selectedCategory}</span>
           </span>
         )}
         {searchQuery && (
           <span>
-            {' '}
-            matching &quot;<span className="font-medium text-foreground">{searchQuery}</span>&quot;
+            {' '}matching "<span className="font-medium text-[hsl(0,0%,14%)]">{searchQuery}</span>"
           </span>
         )}
       </div>

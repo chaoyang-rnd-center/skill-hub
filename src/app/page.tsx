@@ -6,8 +6,8 @@ import { SearchFilter } from '@/components/search-filter';
 import { SkillCard } from '@/components/skill-card';
 import { skills } from '@/data/skills';
 import { Category, SortOption } from '@/types/skill';
-import { Code2, Sparkles, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Code2, ArrowRight, Sparkles } from 'lucide-react';
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -17,12 +17,10 @@ export default function Home() {
   const filteredSkills = useMemo(() => {
     let result = [...skills];
 
-    // Filter by category
     if (selectedCategory !== 'All') {
       result = result.filter((skill) => skill.category === selectedCategory);
     }
 
-    // Filter by search query
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       result = result.filter(
@@ -33,7 +31,6 @@ export default function Home() {
       );
     }
 
-    // Sort
     result.sort((a, b) => {
       switch (sortBy) {
         case 'downloads':
@@ -52,59 +49,56 @@ export default function Home() {
     return result;
   }, [searchQuery, selectedCategory, sortBy]);
 
+  const totalDownloads = skills.reduce((acc, s) => acc + s.downloads, 0);
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[hsl(210,20%,98%)]">
       <Header />
 
-      {/* Hero Section */}
-      <section className="relative overflow-hidden border-b bg-gradient-to-b from-muted/50 to-background">
-        <div className="container px-4 py-16 md:py-24">
-          <div className="flex flex-col items-center text-center space-y-6 max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
-              <Sparkles className="w-4 h-4" />
-              <span>Discover Amazing Agent Skills</span>
+      {/* Hero Section - Calcite Style */}
+      <section className="bg-white border-b border-[hsl(210,16%,90%)]">
+        <div className="container max-w-7xl mx-auto px-4 py-12 md:py-16">
+          <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[hsl(210,100%,96%)] text-[hsl(210,100%,38%)] text-xs font-semibold mb-4">
+              <Sparkles className="w-3.5 h-3.5" />
+              Discover Agent Skills
             </div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-              Find the Perfect{' '}
-              <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-                Skill
-              </span>{' '}
-              for Your Agent
+            <h1 className="text-3xl md:text-4xl font-semibold text-[hsl(0,0%,14%)] tracking-tight">
+              Find the Perfect Skill for Your Agent
             </h1>
 
-            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
+            <p className="text-base text-[hsl(210,8%,45%)] mt-4 max-w-lg leading-relaxed">
               Browse, discover, and install community-built skills to supercharge your AI agents. 
               One-click installation, endless possibilities.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Button size="lg" className="gap-2">
-                <Code2 className="w-5 h-5" />
+            <div className="flex items-center gap-2 mt-6">
+              <Button className="gap-1.5">
+                <Code2 className="w-4 h-4" />
                 Browse Skills
               </Button>
-              <Button variant="outline" size="lg" className="gap-2">
+              <Button variant="outline" className="gap-1.5">
                 Submit Your Skill
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-3.5 h-3.5" />
               </Button>
             </div>
 
-            <div className="flex items-center gap-8 pt-8 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <span className="text-2xl font-bold text-foreground">{skills.length}+</span>
-                <span>Skills</span>
+            {/* Stats - Calcite Style */}
+            <div className="flex items-center gap-8 mt-10 pt-8 border-t border-[hsl(210,16%,90%)] w-full justify-center">
+              <div className="text-center">
+                <div className="text-2xl font-semibold text-[hsl(0,0%,14%)]">{skills.length}</div>
+                <div className="text-xs text-[hsl(210,8%,45%)] mt-0.5">Skills</div>
               </div>
-              <div className="w-px h-8 bg-border" />
-              <div className="flex items-center gap-2">
-                <span className="text-2xl font-bold text-foreground">
-                  {skills.reduce((acc, s) => acc + s.downloads, 0).toLocaleString()}
-                </span>
-                <span>Downloads</span>
+              <div className="w-px h-10 bg-[hsl(210,16%,90%)]" />
+              <div className="text-center">
+                <div className="text-2xl font-semibold text-[hsl(0,0%,14%)]">{(totalDownloads / 1000).toFixed(0)}k</div>
+                <div className="text-xs text-[hsl(210,8%,45%)] mt-0.5">Downloads</div>
               </div>
-              <div className="w-px h-8 bg-border" />
-              <div className="flex items-center gap-2">
-                <span className="text-2xl font-bold text-foreground">{CATEGORIES.length - 1}</span>
-                <span>Categories</span>
+              <div className="w-px h-10 bg-[hsl(210,16%,90%)]" />
+              <div className="text-center">
+                <div className="text-2xl font-semibold text-[hsl(0,0%,14%)]">{CATEGORIES.length - 1}</div>
+                <div className="text-xs text-[hsl(210,8%,45%)] mt-0.5">Categories</div>
               </div>
             </div>
           </div>
@@ -112,57 +106,59 @@ export default function Home() {
       </section>
 
       {/* Skills Section */}
-      <section className="container px-4 py-12">
-        <SearchFilter
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          selectedCategory={selectedCategory}
-          onCategoryChange={setSelectedCategory}
-          sortBy={sortBy}
-          onSortChange={setSortBy}
-          resultCount={filteredSkills.length}
-        />
+      <section className="container max-w-7xl mx-auto px-4 py-8">
+        <div className="bg-white rounded border border-[hsl(210,16%,90%)] p-4 md:p-6">
+          <SearchFilter
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            selectedCategory={selectedCategory}
+            onCategoryChange={setSelectedCategory}
+            sortBy={sortBy}
+            onSortChange={setSortBy}
+            resultCount={filteredSkills.length}
+          />
 
-        {filteredSkills.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-8">
-            {filteredSkills.map((skill) => (
-              <SkillCard key={skill.id} skill={skill} />
-            ))}
-          </div>
-        ) : (
-          <div className="flex flex-col items-center justify-center py-20 text-center">
-            <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
-              <Code2 className="w-8 h-8 text-muted-foreground" />
+          {filteredSkills.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-6">
+              {filteredSkills.map((skill) => (
+                <SkillCard key={skill.id} skill={skill} />
+              ))}
             </div>
-            <h3 className="text-lg font-semibold mb-2">No skills found</h3>
-            <p className="text-muted-foreground max-w-md">
-              Try adjusting your search or category filter to find what you&apos;re looking for.
-            </p>
-          </div>
-        )}
+          ) : (
+            <div className="flex flex-col items-center justify-center py-16 text-center">
+              <div className="w-12 h-12 rounded-full bg-[hsl(210,20%,96%)] flex items-center justify-center mb-3">
+                <Code2 className="w-6 h-6 text-[hsl(210,8%,45%)]" />
+              </div>
+              <h3 className="text-sm font-semibold text-[hsl(0,0%,14%)] mb-1">No skills found</h3>
+              <p className="text-sm text-[hsl(210,8%,45%)]">
+                Try adjusting your search or filter to find what you&apos;re looking for.
+              </p>
+            </div>
+          )}
+        </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t mt-20">
-        <div className="container px-4 py-8">
+      {/* Footer - Calcite Style */}
+      <footer className="bg-white border-t border-[hsl(210,16%,90%)] mt-auto">
+        <div className="container max-w-7xl mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-gradient-to-br from-primary to-primary/70">
-                <Code2 className="w-4 h-4 text-primary-foreground" />
+              <div className="flex items-center justify-center w-6 h-6 rounded bg-[hsl(210,100%,38%)]">
+                <Code2 className="w-3.5 h-3.5 text-white" />
               </div>
-              <span className="font-semibold">SkillHub</span>
+              <span className="font-semibold text-sm">SkillHub</span>
             </div>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-xs text-[hsl(210,8%,45%)]">
               © 2024 SkillHub. Built for the AI agent community.
             </p>
-            <div className="flex items-center gap-6 text-sm text-muted-foreground">
-              <a href="#" className="hover:text-foreground transition-colors">
+            <div className="flex items-center gap-4 text-xs">
+              <a href="#" className="text-[hsl(210,8%,45%)] hover:text-[hsl(210,100%,38%)] transition-colors">
                 Privacy
               </a>
-              <a href="#" className="hover:text-foreground transition-colors">
+              <a href="#" className="text-[hsl(210,8%,45%)] hover:text-[hsl(210,100%,38%)] transition-colors">
                 Terms
               </a>
-              <a href="#" className="hover:text-foreground transition-colors">
+              <a href="#" className="text-[hsl(210,8%,45%)] hover:text-[hsl(210,100%,38%)] transition-colors">
                 Contact
               </a>
             </div>
